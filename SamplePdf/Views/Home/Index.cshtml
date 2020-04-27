@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>PDF Sample Project</h1>
+    <p>
+        @Html.ActionLink("Download PDF", "SampleAsPdf", "Pdf", new { }, new { id = "downloadButton", @class = "btn btn-primary btn-lg" })
+
+        <button class="btn btn-danger btn-lg" onclick="generateClicks()">Generate Error</button>
+    </p>
+</div>
+
+<script>
+    function generateClicks() {
+        var numberOfClicks = 30;
+        var button = document.getElementById("downloadButton");
+        for (var index = 0; index < numberOfClicks; index++) {
+            button.click();
+        }
+    }
+</script>
