@@ -29,9 +29,9 @@ namespace SamplePdf.Services
         void Initialize();
 
 
-        FileStreamResult GenerateUrlToPdf(Uri url, string filename, PdfSettings pdfSettings = null);
+        FileStreamResult RenderUrlToPdf(Uri url, string filename, PdfSettings pdfSettings = null);
 
-        FileStreamResult GenerateHtmlToPdf(string html, string filename, PdfSettings pdfSettings = null);
+        FileStreamResult RenderHtmlToPdf(string html, string filename, PdfSettings pdfSettings = null);
     }
 
     public class PdfService : IPdfService
@@ -55,7 +55,7 @@ namespace SamplePdf.Services
 
         }
 
-        public FileStreamResult GenerateUrlToPdf(Uri url, string filename, PdfSettings pdfSettings = null)
+        public FileStreamResult RenderUrlToPdf(Uri url, string filename, PdfSettings pdfSettings = null)
         {
             var absoluteUrl = url.ToAbsolute();
 
@@ -68,7 +68,7 @@ namespace SamplePdf.Services
             return returnStream;
         }
 
-        public FileStreamResult GenerateHtmlToPdf(string html, string filename, PdfSettings pdfSettings = null)
+        public FileStreamResult RenderHtmlToPdf(string html, string filename, PdfSettings pdfSettings = null)
         {
             var renderer = CreateRenderer(filename, pdfSettings);
             var pdf = renderer.RenderHtmlAsPdf(html);

@@ -22,7 +22,7 @@ namespace SamplePdf.Controllers
             var filename = "UrlAsPdf.pdf";
             var url = new Uri(Url.Action("Sample", "Pdf"), UriKind.Relative);
 
-            var result = _pdfService.GenerateUrlToPdf(url, filename, null);
+            var result = _pdfService.RenderUrlToPdf(url, filename, null);
 
             return result;
         }
@@ -34,7 +34,7 @@ namespace SamplePdf.Controllers
             var filename = "HtmlAsPdf.pdf";
             var html = this.RenderViewToString("~/Views/Pdf/Sample.cshtml", model);
 
-            var result = _pdfService.GenerateHtmlToPdf(html, filename, null);
+            var result = _pdfService.RenderHtmlToPdf(html, filename, null);
 
             return result;
         }
