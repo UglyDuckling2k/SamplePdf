@@ -1,6 +1,7 @@
 ﻿using SamplePdf.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -21,6 +22,9 @@ namespace SamplePdf
 
             var pdfService = UnityConfig.Container.Resolve<IPdfService>();
             pdfService.Initialize();
+
+            TextWriterTraceListener writer = new TextWriterTraceListener(System.Console.Out);
+            Debug.Listeners.Add(writer);
         }
     }
 }

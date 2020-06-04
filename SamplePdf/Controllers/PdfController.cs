@@ -1,4 +1,5 @@
-﻿using SamplePdf.Services;
+﻿using SamplePdf.Models.Pdf;
+using SamplePdf.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,19 +17,32 @@ namespace SamplePdf.Controllers
             _pdfService = pdfService;
         }
 
-        public FileStreamResult SampleAsPdf()
+        public FileStreamResult UrlAsPdf()
         {
-            var filename = "sample.pdf";
-            var uri = new Uri(Url.Action("Sample", "Pdf"), UriKind.Relative);
+            var filename = "UrlAsPdf.pdf";
+            var url = new Uri(Url.Action("Sample", "Pdf"), UriKind.Relative);
 
-            var result = _pdfService.GeneratePdf(uri, filename, null);
+            var result = _pdfService.GenerateUrlToPdf(url, filename, null);
+
+            return result;
+        }
+
+        public FileStreamResult HtmlAsPdf()
+        {
+            var model = new SampleModel() { Text = "Hello HtmlAsPdf!" };
+
+            var filename = "HtmlAsPdf.pdf";
+            var html = this.RenderViewToString("~/Views/Pdf/Sample.cshtml", model);
+
+            var result = _pdfService.GenerateHtmlToPdf(html, filename, null);
 
             return result;
         }
 
         public ActionResult Sample()
         {
-            return View();
+            var model = new SampleModel() { Text = "Hello UrlAsPdf!" };
+            return View(model);
         }
     }
 }

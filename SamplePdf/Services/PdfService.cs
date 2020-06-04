@@ -1,9 +1,13 @@
 ﻿using IronPdf;
 using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
+using System.Web.SessionState;
 
 namespace SamplePdf.Services
 {
@@ -24,24 +28,19 @@ namespace SamplePdf.Services
     {
         void Initialize();
 
-        /// <summary>
-        /// Generates a PDF stream that is sent back to user
-        /// </summary>
-        /// <param name="url">Source Url for PDF contents</param>
-        /// <returns>MemoryStream</returns>
-        MemoryStream GeneratePdf(Uri url, PdfSettings pdfSettings = null);
 
-        /// <summary>
-        /// Generates a PDF documents that is sent back to user
-        /// </summary>
-        /// <param name="filename">Name of returned file</param>
-        /// <param name="url">source Url for PDF contents</param>
-        /// <returns>PDF FileStreamResult</returns>
-        FileStreamResult GeneratePdf(Uri url, string filename, PdfSettings pdfSettings = null);
+        FileStreamResult GenerateUrlToPdf(Uri url, string filename, PdfSettings pdfSettings = null);
+
+        FileStreamResult GenerateHtmlToPdf(string html, string filename, PdfSettings pdfSettings = null);
     }
 
     public class PdfService : IPdfService
     {
+
+
+        private static int index = 0;
+        private static object Lock = new object();
+
         public PdfService()
         {
 
@@ -53,30 +52,33 @@ namespace SamplePdf.Services
                 .AppSettings["IronPdf.TempPath"];
             //License.LicenseKey = ConfigurationManager
             //    .AppSettings["IronPdf.LicenseKey"];
+
         }
 
-        public MemoryStream GeneratePdf(Uri url, PdfSettings pdfSettings = null)
+        public FileStreamResult GenerateUrlToPdf(Uri url, string filename, PdfSettings pdfSettings = null)
         {
             var absoluteUrl = url.ToAbsolute();
 
-            var pdfRenderer = CreateRenderer(null, pdfSettings);
-            var pdf = pdfRenderer.RenderUrlAsPdf(absoluteUrl);
+            var renderer = CreateRenderer(filename, pdfSettings);
+            var pdf = renderer.RenderUrlAsPdf(absoluteUrl);
 
-            return pdf.Stream;
-        }
-
-        public FileStreamResult GeneratePdf(Uri url, string filename, PdfSettings pdfSettings = null)
-        {
-            var absoluteUrl = url.ToAbsolute();
-
-            var pdfRenderer = CreateRenderer(filename, pdfSettings);
-            var pdf = pdfRenderer.RenderUrlAsPdf(absoluteUrl);
-
-            FileStreamResult returnStream = new FileStreamResult(pdf.Stream, "application/pdf");
+            var returnStream = new FileStreamResult(pdf.Stream, "application/pdf");
             returnStream.FileDownloadName = filename;
 
             return returnStream;
         }
+
+        public FileStreamResult GenerateHtmlToPdf(string html, string filename, PdfSettings pdfSettings = null)
+        {
+            var renderer = CreateRenderer(filename, pdfSettings);
+            var pdf = renderer.RenderHtmlAsPdf(html);
+
+            var returnStream = new FileStreamResult(pdf.Stream, "application/pdf");
+            returnStream.FileDownloadName = filename;
+
+            return returnStream;
+        }
+
 
         private HtmlToPdf CreateRenderer(string filename = null, PdfSettings pdfSettings = null)
         {
@@ -127,5 +129,7 @@ namespace SamplePdf.Services
 
             return renderer;
         }
+
+
     }
 }

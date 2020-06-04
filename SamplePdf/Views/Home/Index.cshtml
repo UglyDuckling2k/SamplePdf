@@ -2,21 +2,29 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>PDF Sample Project</h1>
-    <p>
-        @Html.ActionLink("Download PDF", "SampleAsPdf", "Pdf", new { }, new { id = "downloadButton", @class = "btn btn-primary btn-lg" })
+    <div class="jumbotron">
+        <h1>Url to PDF</h1>
+        <p>
+            @Html.ActionLink("Download PDF", "UrlAsPdf", "Pdf", new { }, new { id = "urlDownloadButton", @class = "btn btn-primary btn-lg" })
+            <button class="btn btn-danger btn-lg" onclick="generateClicks('urlDownloadButton')">Generate clicks</button>
+        </p>
 
-        <button class="btn btn-danger btn-lg" onclick="generateClicks()">Generate Error</button>
-    </p>
-</div>
+        <br/><br />
+
+        <h1>Html to PDF</h1>
+        <p>
+            @Html.ActionLink("Download PDF", "HtmlAsPdf", "Pdf", new { }, new { id = "htmlDownloadButton", @class = "btn btn-primary btn-lg" })
+            <button class="btn btn-danger btn-lg" onclick="generateClicks('htmlDownloadButton')">Generate clicks</button>
+        </p>
+    </div>
 
 <script>
-    function generateClicks() {
-        var numberOfClicks = 30;
-        var button = document.getElementById("downloadButton");
+    function generateClicks(buttonId) {
+        var numberOfClicks = 20;
+        var button = document.getElementById(buttonId);
         for (var index = 0; index < numberOfClicks; index++) {
             button.click();
         }
     }
+
 </script>
